@@ -26,103 +26,6 @@ same sized appartment in Flushing, NY. Hence, we are going to
 invastigate how all the known variables might affect the rent, and
 finally make our conclusion based on our discoveris.
 
-    library(mosaic)
-
-    ## Loading required package: dplyr
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-    ## Loading required package: lattice
-
-    ## Loading required package: ggformula
-
-    ## Loading required package: ggplot2
-
-    ## Loading required package: ggstance
-
-    ## 
-    ## Attaching package: 'ggstance'
-
-    ## The following objects are masked from 'package:ggplot2':
-    ## 
-    ##     geom_errorbarh, GeomErrorbarh
-
-    ## 
-    ## New to ggformula?  Try the tutorials: 
-    ##  learnr::run_tutorial("introduction", package = "ggformula")
-    ##  learnr::run_tutorial("refining", package = "ggformula")
-
-    ## Loading required package: mosaicData
-
-    ## Loading required package: Matrix
-
-    ## Registered S3 method overwritten by 'mosaic':
-    ##   method                           from   
-    ##   fortify.SpatialPolygonsDataFrame ggplot2
-
-    ## 
-    ## The 'mosaic' package masks several functions from core packages in order to add 
-    ## additional features.  The original behavior of these functions should not be affected by this.
-    ## 
-    ## Note: If you use the Matrix package, be sure to load it BEFORE loading mosaic.
-    ## 
-    ## Have you tried the ggformula package for your plots?
-
-    ## 
-    ## Attaching package: 'mosaic'
-
-    ## The following object is masked from 'package:Matrix':
-    ## 
-    ##     mean
-
-    ## The following object is masked from 'package:ggplot2':
-    ## 
-    ##     stat
-
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     count, do, tally
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     binom.test, cor, cor.test, cov, fivenum, IQR, median, prop.test, quantile, sd, t.test, var
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     max, mean, min, prod, range, sample, sum
-
-    library(tidyverse)
-
-    ## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --
-
-    ## v tibble  3.0.1     v purrr   0.3.4
-    ## v tidyr   1.1.0     v stringr 1.4.0
-    ## v readr   1.3.1     v forcats 0.5.0
-
-    ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-    ## x mosaic::count()            masks dplyr::count()
-    ## x purrr::cross()             masks mosaic::cross()
-    ## x mosaic::do()               masks dplyr::do()
-    ## x tidyr::expand()            masks Matrix::expand()
-    ## x dplyr::filter()            masks stats::filter()
-    ## x ggstance::geom_errorbarh() masks ggplot2::geom_errorbarh()
-    ## x dplyr::lag()               masks stats::lag()
-    ## x tidyr::pack()              masks Matrix::pack()
-    ## x mosaic::stat()             masks ggplot2::stat()
-    ## x mosaic::tally()            masks dplyr::tally()
-    ## x tidyr::unpack()            masks Matrix::unpack()
-
-    library(ggplot2)
-
     df = read.csv("greenbuildings.csv", header=T)
 
 ### Data Cleaning
@@ -581,7 +484,7 @@ building to claim good rent if we make it as a class\_a building in a
 good cluster, since the age and renovation are not likely to be
 considered for the new building.
 
-2. **Flights At ABIA**
+**2. Flights At ABIA**
 ----------------------
 
 ### Introduction
@@ -590,10 +493,6 @@ As a traveler, one of the most important things that we really care
 about is weather or not our flights would delay. In this problem, we
 will focus on analyzing the delay situations of different flight
 companies.
-
-    library(mosaic)
-    library(tidyverse)
-    library(ggplot2)
 
     df = read.csv("ABIA.csv", header=T)
 
@@ -794,46 +693,8 @@ We shall not take UA except the destination or origin is RDU. After all,
 AA flights are likely to delay less than other two companies. As a
 result, I shall take AA if possible.
 
-3. **Portfolio Modeling**
+**3. Portfolio Modeling**
 -------------------------
-
-    library(mosaic)
-    library(quantmod)
-
-    ## Loading required package: xts
-
-    ## Loading required package: zoo
-
-    ## 
-    ## Attaching package: 'zoo'
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     as.Date, as.Date.numeric
-
-    ## 
-    ## Attaching package: 'xts'
-
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     first, last
-
-    ## Loading required package: TTR
-
-    ## Registered S3 method overwritten by 'quantmod':
-    ##   method            from
-    ##   as.zoo.data.frame zoo
-
-    ## Version 0.4-0 included new data defaults. See ?getSymbols.
-
-    library(foreach)
-
-    ## 
-    ## Attaching package: 'foreach'
-
-    ## The following objects are masked from 'package:purrr':
-    ## 
-    ##     accumulate, when
 
 We decided to select 5 ETFs - SPY, QQQ, VTI, GLD, IVW - with different
 levels of risk - SPY seems to have a relatively low risk while IVW seems
@@ -903,20 +764,27 @@ for each stock**
     # each row is a simulated trajectory, each column is a data
     head(sim1)
 
-    ##               [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]      [,8]      [,9]    [,10]    [,11]    [,12]
-    ## result.1 101044.34 100892.46  99161.34  99621.93  99332.97  99078.51  98986.88  99225.62  99460.16 100194.9 100319.2 101114.9
-    ## result.2  99932.83 100859.17 101606.69 101535.01 101481.71 101776.94 101780.02 101892.31 102222.06 102931.2 102534.6 102320.4
-    ## result.3 100090.37  99561.57  99987.29 101650.14 101417.78 101657.20 100371.32 100766.39 100897.35 100976.0 101474.8 102619.0
-    ## result.4 101150.06 101191.75 101459.76 101059.89 101323.48  99446.69  99680.28  99664.37 100314.15 100418.0 101256.8 102245.2
-    ## result.5 100211.77  99644.46  99614.67  99845.72  99905.90 100294.27 100171.21 100185.43  99599.09 100051.0 100865.0 101260.6
-    ## result.6 100068.29  99481.38  99377.03  98974.03  99260.48 100600.36 100876.49 102049.47 102162.38 101410.0 101412.1 102389.4
-    ##              [,13]     [,14]    [,15]     [,16]     [,17]     [,18]     [,19]     [,20]
-    ## result.1  99672.28  99473.57  98743.9  98831.92  98885.73  99871.51  99295.33  97738.35
-    ## result.2 102434.66 102466.99 102928.8 103309.73 103440.57 100944.37 101260.46  99847.04
-    ## result.3 103854.46 104751.84 103586.9 103600.78 103161.18 103355.79 103241.18 103190.26
-    ## result.4 101638.60 101147.90 101077.1 101269.71 101925.80 100184.69 100062.58  99300.48
-    ## result.5 101669.01 101388.85 103653.5 104314.68 104604.29 104380.34 103101.46 102070.22
-    ## result.6 102354.18 102651.61 102848.7 102818.59 102783.68 102955.92 101988.75 100965.62
+    ##               [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]
+    ## result.1 101044.34 100892.46  99161.34  99621.93  99332.97  99078.51  98986.88
+    ## result.2  99932.83 100859.17 101606.69 101535.01 101481.71 101776.94 101780.02
+    ## result.3 100090.37  99561.57  99987.29 101650.14 101417.78 101657.20 100371.32
+    ## result.4 101150.06 101191.75 101459.76 101059.89 101323.48  99446.69  99680.28
+    ## result.5 100211.77  99644.46  99614.67  99845.72  99905.90 100294.27 100171.21
+    ## result.6 100068.29  99481.38  99377.03  98974.03  99260.48 100600.36 100876.49
+    ##               [,8]      [,9]    [,10]    [,11]    [,12]     [,13]     [,14]
+    ## result.1  99225.62  99460.16 100194.9 100319.2 101114.9  99672.28  99473.57
+    ## result.2 101892.31 102222.06 102931.2 102534.6 102320.4 102434.66 102466.99
+    ## result.3 100766.39 100897.35 100976.0 101474.8 102619.0 103854.46 104751.84
+    ## result.4  99664.37 100314.15 100418.0 101256.8 102245.2 101638.60 101147.90
+    ## result.5 100185.43  99599.09 100051.0 100865.0 101260.6 101669.01 101388.85
+    ## result.6 102049.47 102162.38 101410.0 101412.1 102389.4 102354.18 102651.61
+    ##             [,15]     [,16]     [,17]     [,18]     [,19]     [,20]
+    ## result.1  98743.9  98831.92  98885.73  99871.51  99295.33  97738.35
+    ## result.2 102928.8 103309.73 103440.57 100944.37 101260.46  99847.04
+    ## result.3 103586.9 103600.78 103161.18 103355.79 103241.18 103190.26
+    ## result.4 101077.1 101269.71 101925.80 100184.69 100062.58  99300.48
+    ## result.5 103653.5 104314.68 104604.29 104380.34 103101.46 102070.22
+    ## result.6 102848.7 102818.59 102783.68 102955.92 101988.75 100965.62
 
     hist(sim1[,n_days], 25)
 
@@ -958,20 +826,27 @@ One of the possible total earnings for 20 trading days is 1136.976.
     # each row is a simulated trajectory, each column is a data
     head(sim2)
 
-    ##               [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]      [,8]      [,9]     [,10]    [,11]    [,12]
-    ## result.1 101152.13 100963.81  99183.61  99696.93  99432.14  99155.79  99040.27  99524.88  99697.96 100438.60 100440.3 101301.2
-    ## result.2  99933.25 100822.95 101573.73 101482.17 101467.26 101774.15 101810.39 101977.33 102379.02 103079.13 102675.3 102529.8
-    ## result.3 100103.13  99549.78  99945.38 101666.19 101512.93 101693.52 100321.15 100746.32 100806.35 100911.88 101378.1 102654.4
-    ## result.4 101143.68 101232.17 101812.50 101455.05 101680.30  99593.96  99741.74  99697.58 100422.71 100524.05 101273.6 102295.0
-    ## result.5 100149.45  99085.00  99067.23  99338.37  99354.81  99682.17  99641.89  99598.54  99024.38  99497.26 100314.7 100750.4
-    ## result.6 100004.26  99357.85  99168.51  98839.01  99141.89 100491.13 100790.06 102042.22 102138.67 101514.18 101480.3 102642.3
-    ##             [,13]     [,14]     [,15]     [,16]     [,17]    [,18]     [,19]     [,20]
-    ## result.1  99872.6  99690.23  98913.59  99031.62  99073.06 100073.2  99500.21  97957.65
-    ## result.2 102641.3 102624.99 102944.03 103086.03 103194.29 100679.3 101061.66  99638.89
-    ## result.3 103972.6 104894.32 103611.83 103677.34 103181.19 103364.3 103234.91 103214.91
-    ## result.4 101612.3 101060.36 101095.90 101276.74 101899.35 100108.6 100003.46  99266.87
-    ## result.5 101231.4 100928.56 103200.07 103848.66 104109.43 103846.4 102433.70 101308.70
-    ## result.6 102641.5 102951.79 103097.30 103023.68 103088.62 103224.2 102459.39 101342.49
+    ##               [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]
+    ## result.1 101152.13 100963.81  99183.61  99696.93  99432.14  99155.79  99040.27
+    ## result.2  99933.25 100822.95 101573.73 101482.17 101467.26 101774.15 101810.39
+    ## result.3 100103.13  99549.78  99945.38 101666.19 101512.93 101693.52 100321.15
+    ## result.4 101143.68 101232.17 101812.50 101455.05 101680.30  99593.96  99741.74
+    ## result.5 100149.45  99085.00  99067.23  99338.37  99354.81  99682.17  99641.89
+    ## result.6 100004.26  99357.85  99168.51  98839.01  99141.89 100491.13 100790.06
+    ##               [,8]      [,9]     [,10]    [,11]    [,12]    [,13]     [,14]
+    ## result.1  99524.88  99697.96 100438.60 100440.3 101301.2  99872.6  99690.23
+    ## result.2 101977.33 102379.02 103079.13 102675.3 102529.8 102641.3 102624.99
+    ## result.3 100746.32 100806.35 100911.88 101378.1 102654.4 103972.6 104894.32
+    ## result.4  99697.58 100422.71 100524.05 101273.6 102295.0 101612.3 101060.36
+    ## result.5  99598.54  99024.38  99497.26 100314.7 100750.4 101231.4 100928.56
+    ## result.6 102042.22 102138.67 101514.18 101480.3 102642.3 102641.5 102951.79
+    ##              [,15]     [,16]     [,17]    [,18]     [,19]     [,20]
+    ## result.1  98913.59  99031.62  99073.06 100073.2  99500.21  97957.65
+    ## result.2 102944.03 103086.03 103194.29 100679.3 101061.66  99638.89
+    ## result.3 103611.83 103677.34 103181.19 103364.3 103234.91 103214.91
+    ## result.4 101095.90 101276.74 101899.35 100108.6 100003.46  99266.87
+    ## result.5 103200.07 103848.66 104109.43 103846.4 102433.70 101308.70
+    ## result.6 103097.30 103023.68 103088.62 103224.2 102459.39 101342.49
 
     hist(sim2[,n_days], 25)
 
@@ -1010,20 +885,27 @@ possible total earnings for 20 trading days is 1093.769.
     # each row is a simulated trajectory, each column is a data
     head(sim3)
 
-    ##               [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]      [,8]      [,9]     [,10]     [,11]    [,12]
-    ## result.1 101099.66 100911.28  98933.13  99439.80  99180.14  98887.48  98802.63  99054.34  99260.86 100004.67  99996.19 100933.3
-    ## result.2  99945.37 100844.66 101602.21 101553.68 101583.74 101856.69 101895.66 102038.80 102464.21 103213.88 102748.36 102546.2
-    ## result.3 100074.80  99610.92 100069.45 101873.90 101795.69 102011.71 100600.72 100987.76 101134.65 101246.74 101683.61 102873.5
-    ## result.4 101121.45 101216.72 101556.59 101174.41 101451.71  99370.61  99659.42  99602.50 100371.81 100474.97 101286.16 102342.5
-    ## result.5 100225.87  99315.75  99271.00  99466.94  99480.69  99860.39  99783.54  99802.13  99242.33  99687.75 100552.27 101027.4
-    ## result.6 100145.35  99512.03  99448.78  99081.67  99449.26 100930.93 101250.00 102505.88 102560.57 101748.32 101712.33 102915.4
-    ##              [,13]    [,14]     [,15]     [,16]     [,17]     [,18]     [,19]     [,20]
-    ## result.1  99408.04  99166.7  98411.72  98514.76  98587.96  99549.57  98925.89  97316.59
-    ## result.2 102640.86 102687.6 103089.47 103511.54 103659.51 101074.93 101474.09  99948.63
-    ## result.3 104268.81 105214.1 103911.54 103998.96 103490.84 103664.13 103573.31 103574.40
-    ## result.4 101666.54 101082.8 101081.85 101252.73 101901.89  99910.43  99747.39  98982.90
-    ## result.5 101473.87 101165.9 103611.46 104253.80 104547.49 104331.36 102897.77 101724.85
-    ## result.6 102961.06 103237.1 103343.09 103286.90 103314.79 103503.65 102515.97 101315.46
+    ##               [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]
+    ## result.1 101099.66 100911.28  98933.13  99439.80  99180.14  98887.48  98802.63
+    ## result.2  99945.37 100844.66 101602.21 101553.68 101583.74 101856.69 101895.66
+    ## result.3 100074.80  99610.92 100069.45 101873.90 101795.69 102011.71 100600.72
+    ## result.4 101121.45 101216.72 101556.59 101174.41 101451.71  99370.61  99659.42
+    ## result.5 100225.87  99315.75  99271.00  99466.94  99480.69  99860.39  99783.54
+    ## result.6 100145.35  99512.03  99448.78  99081.67  99449.26 100930.93 101250.00
+    ##               [,8]      [,9]     [,10]     [,11]    [,12]     [,13]    [,14]
+    ## result.1  99054.34  99260.86 100004.67  99996.19 100933.3  99408.04  99166.7
+    ## result.2 102038.80 102464.21 103213.88 102748.36 102546.2 102640.86 102687.6
+    ## result.3 100987.76 101134.65 101246.74 101683.61 102873.5 104268.81 105214.1
+    ## result.4  99602.50 100371.81 100474.97 101286.16 102342.5 101666.54 101082.8
+    ## result.5  99802.13  99242.33  99687.75 100552.27 101027.4 101473.87 101165.9
+    ## result.6 102505.88 102560.57 101748.32 101712.33 102915.4 102961.06 103237.1
+    ##              [,15]     [,16]     [,17]     [,18]     [,19]     [,20]
+    ## result.1  98411.72  98514.76  98587.96  99549.57  98925.89  97316.59
+    ## result.2 103089.47 103511.54 103659.51 101074.93 101474.09  99948.63
+    ## result.3 103911.54 103998.96 103490.84 103664.13 103573.31 103574.40
+    ## result.4 101081.85 101252.73 101901.89  99910.43  99747.39  98982.90
+    ## result.5 103611.46 104253.80 104547.49 104331.36 102897.77 101724.85
+    ## result.6 103343.09 103286.90 103314.79 103503.65 102515.97 101315.46
 
     hist(sim3[,n_days], 25)
 
@@ -1049,18 +931,13 @@ expected returns each time, but the differences between all the
 portfolios are pretty small. Since the result varies and close, we
 cannot conclude which one is better.
 
-4. **Market Segmentation**
+**4. Market Segmentation**
 --------------------------
 
 ### Introduction
 
 In this problem, we will identify interesting market segments for
 NutrientH20 that appear to stand out in its social-media audience.
-
-    library(tidyverse)
-    library(ggplot2)
-    library(LICORS)
-    library(fpc) # plot cluster
 
     social_marketing = read.csv("social_marketing.csv", row.names=1)
 
@@ -1093,18 +970,26 @@ sports\_playing are highly correlated with each other.
     summary(pca_marketing)
 
     ## Importance of components:
-    ##                           PC1     PC2     PC3     PC4     PC5     PC6     PC7     PC8     PC9    PC10    PC11    PC12   PC13
-    ## Standard deviation     2.0947 1.66891 1.59870 1.53723 1.47038 1.28596 1.22006 1.17870 1.05466 0.99562 0.96292 0.95849 0.9330
-    ## Proportion of Variance 0.1371 0.08704 0.07987 0.07385 0.06756 0.05168 0.04652 0.04342 0.03476 0.03098 0.02898 0.02871 0.0272
-    ## Cumulative Proportion  0.1371 0.22416 0.30403 0.37788 0.44544 0.49712 0.54364 0.58705 0.62181 0.65279 0.68176 0.71047 0.7377
-    ##                           PC14    PC15    PC16    PC17    PC18    PC19    PC20   PC21   PC22    PC23   PC24   PC25    PC26    PC27
-    ## Standard deviation     0.92172 0.90836 0.84106 0.80753 0.74817 0.69250 0.68440 0.6524 0.6475 0.63471 0.6274 0.6146 0.59525 0.58871
-    ## Proportion of Variance 0.02655 0.02579 0.02211 0.02038 0.01749 0.01499 0.01464 0.0133 0.0131 0.01259 0.0123 0.0118 0.01107 0.01083
-    ## Cumulative Proportion  0.76423 0.79001 0.81212 0.83250 0.84999 0.86497 0.87961 0.8929 0.9060 0.91860 0.9309 0.9427 0.95378 0.96461
-    ##                          PC28    PC29    PC30    PC31    PC32
-    ## Standard deviation     0.5514 0.48227 0.47638 0.43701 0.42172
-    ## Proportion of Variance 0.0095 0.00727 0.00709 0.00597 0.00556
-    ## Cumulative Proportion  0.9741 0.98138 0.98847 0.99444 1.00000
+    ##                           PC1     PC2     PC3     PC4     PC5     PC6     PC7
+    ## Standard deviation     2.0947 1.66891 1.59870 1.53723 1.47038 1.28596 1.22006
+    ## Proportion of Variance 0.1371 0.08704 0.07987 0.07385 0.06756 0.05168 0.04652
+    ## Cumulative Proportion  0.1371 0.22416 0.30403 0.37788 0.44544 0.49712 0.54364
+    ##                            PC8     PC9    PC10    PC11    PC12   PC13    PC14
+    ## Standard deviation     1.17870 1.05466 0.99562 0.96292 0.95849 0.9330 0.92172
+    ## Proportion of Variance 0.04342 0.03476 0.03098 0.02898 0.02871 0.0272 0.02655
+    ## Cumulative Proportion  0.58705 0.62181 0.65279 0.68176 0.71047 0.7377 0.76423
+    ##                           PC15    PC16    PC17    PC18    PC19    PC20   PC21
+    ## Standard deviation     0.90836 0.84106 0.80753 0.74817 0.69250 0.68440 0.6524
+    ## Proportion of Variance 0.02579 0.02211 0.02038 0.01749 0.01499 0.01464 0.0133
+    ## Cumulative Proportion  0.79001 0.81212 0.83250 0.84999 0.86497 0.87961 0.8929
+    ##                          PC22    PC23   PC24   PC25    PC26    PC27   PC28
+    ## Standard deviation     0.6475 0.63471 0.6274 0.6146 0.59525 0.58871 0.5514
+    ## Proportion of Variance 0.0131 0.01259 0.0123 0.0118 0.01107 0.01083 0.0095
+    ## Cumulative Proportion  0.9060 0.91860 0.9309 0.9427 0.95378 0.96461 0.9741
+    ##                           PC29    PC30    PC31    PC32
+    ## Standard deviation     0.48227 0.47638 0.43701 0.42172
+    ## Proportion of Variance 0.00727 0.00709 0.00597 0.00556
+    ## Cumulative Proportion  0.98138 0.98847 0.99444 1.00000
 
     var <- apply(pca_marketing$x, 2, var)
     prop <- var / sum(var)
@@ -1123,44 +1008,81 @@ explained.
 
     ## 
     ## Loadings:
-    ##                  PC1    PC2    PC3    PC4    PC5    PC6    PC7    PC8    PC9    PC10   PC11   PC12   PC13   PC14   PC15   PC16  
-    ## current_events                                                                         -0.998                                   
-    ## travel                          0.603                                                                                           
-    ## photo_sharing           -0.132                              0.625                                                               
-    ## tv_film                                             -0.659                      -0.263                                          
-    ## sports_fandom     0.432                                            0.145                                                        
-    ## politics                        0.498                              0.270                                                        
-    ## food              0.409                0.141                                                                                    
-    ## family            0.347                                     0.140                                                               
-    ## home_and_garden                                                                               -0.998                            
-    ## music                                                                           -0.909                                          
-    ## news                            0.114                              0.630                                                        
-    ## online_gaming                                -0.619                              0.115                                          
-    ## shopping                 0.129                              0.747                                                               
-    ## health_nutrition                       0.591                                                                                    
-    ## college_uni                                  -0.595                                                                             
-    ## sports_playing                               -0.505                                                                             
-    ## cooking                 -0.574         0.113                                                                                    
-    ## eco                                                                                                          0.992              
-    ## computers                       0.588                                                                                           
-    ## business                                                                                                           -0.997       
-    ## outdoors                               0.519                                                                                    
-    ## crafts                                                                                                                    -0.996
-    ## automotive                     -0.138                              0.683                                                        
-    ## art                                                 -0.737                       0.249                                          
-    ## religion          0.461                                                                                                         
-    ## beauty                  -0.558                                                                                                  
-    ## parenting         0.441                                                                                                         
-    ## dating           -0.138                                                  -0.895                                                 
-    ## school            0.304                                                  -0.405                                                 
-    ## personal_fitness                       0.578                                                                                    
-    ## fashion                 -0.562                                                                                                  
-    ## small_business                                                                                        0.998                     
+    ##                  PC1    PC2    PC3    PC4    PC5    PC6    PC7    PC8    PC9   
+    ## current_events                                                                 
+    ## travel                          0.603                                          
+    ## photo_sharing           -0.132                              0.625              
+    ## tv_film                                             -0.659                     
+    ## sports_fandom     0.432                                            0.145       
+    ## politics                        0.498                              0.270       
+    ## food              0.409                0.141                                   
+    ## family            0.347                                     0.140              
+    ## home_and_garden                                                                
+    ## music                                                                          
+    ## news                            0.114                              0.630       
+    ## online_gaming                                -0.619                            
+    ## shopping                 0.129                              0.747              
+    ## health_nutrition                       0.591                                   
+    ## college_uni                                  -0.595                            
+    ## sports_playing                               -0.505                            
+    ## cooking                 -0.574         0.113                                   
+    ## eco                                                                            
+    ## computers                       0.588                                          
+    ## business                                                                       
+    ## outdoors                               0.519                                   
+    ## crafts                                                                         
+    ## automotive                     -0.138                              0.683       
+    ## art                                                 -0.737                     
+    ## religion          0.461                                                        
+    ## beauty                  -0.558                                                 
+    ## parenting         0.441                                                        
+    ## dating           -0.138                                                  -0.895
+    ## school            0.304                                                  -0.405
+    ## personal_fitness                       0.578                                   
+    ## fashion                 -0.562                                                 
+    ## small_business                                                                 
+    ##                  PC10   PC11   PC12   PC13   PC14   PC15   PC16  
+    ## current_events          -0.998                                   
+    ## travel                                                           
+    ## photo_sharing                                                    
+    ## tv_film          -0.263                                          
+    ## sports_fandom                                                    
+    ## politics                                                         
+    ## food                                                             
+    ## family                                                           
+    ## home_and_garden                -0.998                            
+    ## music            -0.909                                          
+    ## news                                                             
+    ## online_gaming     0.115                                          
+    ## shopping                                                         
+    ## health_nutrition                                                 
+    ## college_uni                                                      
+    ## sports_playing                                                   
+    ## cooking                                                          
+    ## eco                                           0.992              
+    ## computers                                                        
+    ## business                                            -0.997       
+    ## outdoors                                                         
+    ## crafts                                                     -0.996
+    ## automotive                                                       
+    ## art               0.249                                          
+    ## religion                                                         
+    ## beauty                                                           
+    ## parenting                                                        
+    ## dating                                                           
+    ## school                                                           
+    ## personal_fitness                                                 
+    ## fashion                                                          
+    ## small_business                         0.998                     
     ## 
-    ##                  PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8   PC9  PC10  PC11  PC12  PC13  PC14  PC15  PC16
-    ## SS loadings    1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000
-    ## Proportion Var 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031
-    ## Cumulative Var 0.031 0.062 0.094 0.125 0.156 0.188 0.219 0.250 0.281 0.312 0.344 0.375 0.406 0.438 0.469 0.500
+    ##                  PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8   PC9  PC10
+    ## SS loadings    1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000
+    ## Proportion Var 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031 0.031
+    ## Cumulative Var 0.031 0.062 0.094 0.125 0.156 0.188 0.219 0.250 0.281 0.312
+    ##                 PC11  PC12  PC13  PC14  PC15  PC16
+    ## SS loadings    1.000 1.000 1.000 1.000 1.000 1.000
+    ## Proportion Var 0.031 0.031 0.031 0.031 0.031 0.031
+    ## Cumulative Var 0.344 0.375 0.406 0.438 0.469 0.500
 
 **K-Means Clustering**
 
@@ -1182,13 +1104,20 @@ explained.
 
     summary(cluster_df)
 
-    ##        V1                V2                V3                V4                V5         
-    ##  Min.   :-1.8718   Min.   : 0.2925   Min.   :-1.4540   Min.   :-5.4645   Min.   :-0.6016  
-    ##  1st Qu.: 0.6059   1st Qu.: 0.9194   1st Qu.: 0.5068   1st Qu.: 0.4236   1st Qu.: 0.5716  
-    ##  Median : 0.7648   Median : 1.2533   Median : 0.8176   Median : 0.9179   Median : 0.9017  
-    ##  Mean   : 0.9107   Mean   : 1.9975   Mean   : 0.9597   Mean   : 1.1583   Mean   : 1.6837  
-    ##  3rd Qu.: 1.3309   3rd Qu.: 1.8871   3rd Qu.: 1.3818   3rd Qu.: 1.5337   3rd Qu.: 1.4284  
-    ##  Max.   : 2.6999   Max.   :12.6187   Max.   : 5.3025   Max.   : 7.9416   Max.   :14.0722
+    ##        V1                V2                V3                V4         
+    ##  Min.   :-1.8718   Min.   : 0.2925   Min.   :-1.4540   Min.   :-5.4645  
+    ##  1st Qu.: 0.6059   1st Qu.: 0.9194   1st Qu.: 0.5068   1st Qu.: 0.4236  
+    ##  Median : 0.7648   Median : 1.2533   Median : 0.8176   Median : 0.9179  
+    ##  Mean   : 0.9107   Mean   : 1.9975   Mean   : 0.9597   Mean   : 1.1583  
+    ##  3rd Qu.: 1.3309   3rd Qu.: 1.8871   3rd Qu.: 1.3818   3rd Qu.: 1.5337  
+    ##  Max.   : 2.6999   Max.   :12.6187   Max.   : 5.3025   Max.   : 7.9416  
+    ##        V5         
+    ##  Min.   :-0.6016  
+    ##  1st Qu.: 0.5716  
+    ##  Median : 0.9017  
+    ##  Mean   : 1.6837  
+    ##  3rd Qu.: 1.4284  
+    ##  Max.   :14.0722
 
     cluster_df$interest = row.names(cluster_df)
 
@@ -1238,48 +1167,8 @@ and sports\_fandom appear most among different clusterings. So we
 recommend NutrientH20 to advertise on fields such as cooking, travel,
 health\_nutrition or sports\_fandom.
 
-5. **Author Attribution**
+**5. Author Attribution**
 -------------------------
-
-    library(tm) # text file processing
-
-    ## Loading required package: NLP
-
-    ## 
-    ## Attaching package: 'NLP'
-
-    ## The following object is masked from 'package:ggplot2':
-    ## 
-    ##     annotate
-
-    ## 
-    ## Attaching package: 'tm'
-
-    ## The following object is masked from 'package:mosaic':
-    ## 
-    ##     inspect
-
-    library(tidyverse) # principal component analysis
-    library(e1071) # naive bayes
-    library(class) # k nearest neighbors
-    library(randomForest) # random forest
-
-    ## randomForest 4.6-14
-
-    ## Type rfNews() to see new features/changes/bug fixes.
-
-    ## 
-    ## Attaching package: 'randomForest'
-
-    ## The following object is masked from 'package:ggplot2':
-    ## 
-    ##     margin
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     combine
-
-    library(ggplot2)
 
 ### Data Processing
 
@@ -1415,7 +1304,7 @@ The accuracy of K Nearest Neighbors is 33.8%.
 
     ## [1] 0.7648
 
-The accuracy of Random Forest is 72.56%.
+The accuracy of Random Forest is 76.48%.
 
 ### Conclusion
 
@@ -1428,54 +1317,34 @@ The accuracy of Random Forest is 72.56%.
     ## 3       Random Forest   0.7648
 
 Compared with other models, Random Forest performed best with an
-accuracy of 72.56%. However, the time complexity of Random Forest is not
+accuracy of 76.48%. However, the time complexity of Random Forest is not
 good, which took nearly 5 mins to get the result. We suspected that it
 might require massive resources for the computer to build up a Random
 Forest model.
 
-6. **Association Rule Mining**
+**6. Association Rule Mining**
 ------------------------------
-
-    library(arules)
-
-    ## 
-    ## Attaching package: 'arules'
-
-    ## The following object is masked from 'package:tm':
-    ## 
-    ##     inspect
-
-    ## The following objects are masked from 'package:mosaic':
-    ## 
-    ##     inspect, lhs, rhs
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     recode
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     abbreviate, write
-
-    library(arulesViz)
-
-    ## Loading required package: grid
-
-    ## Registered S3 method overwritten by 'seriation':
-    ##   method         from 
-    ##   reorder.hclust gclus
-
-    library("RColorBrewer")
 
     df = read.transactions('Groceries.txt', sep = ',')
     arules::inspect(head(df,5))
 
-    ##     items                                                                
-    ## [1] {citrus fruit,margarine,ready soups,semi-finished bread}             
-    ## [2] {coffee,tropical fruit,yogurt}                                       
-    ## [3] {whole milk}                                                         
-    ## [4] {cream cheese,meat spreads,pip fruit,yogurt}                         
-    ## [5] {condensed milk,long life bakery product,other vegetables,whole milk}
+    ##     items                     
+    ## [1] {citrus fruit,            
+    ##      margarine,               
+    ##      ready soups,             
+    ##      semi-finished bread}     
+    ## [2] {coffee,                  
+    ##      tropical fruit,          
+    ##      yogurt}                  
+    ## [3] {whole milk}              
+    ## [4] {cream cheese,            
+    ##      meat spreads,            
+    ##      pip fruit,               
+    ##      yogurt}                  
+    ## [5] {condensed milk,          
+    ##      long life bakery product,
+    ##      other vegetables,        
+    ##      whole milk}
 
 ### Data Exploration
 
@@ -1503,12 +1372,18 @@ setting support as 0.001 and confidence as 0.5.
     # arules::inspect the top 5 rules in terms of lift:
     arules::inspect(head(sort(rules, by ="lift"),5))
 
-    ##     lhs                                   rhs              support     confidence coverage    lift     count
-    ## [1] {Instant food products,soda}       => {hamburger meat} 0.001220132 0.6315789  0.001931876 18.99565 12   
-    ## [2] {popcorn,soda}                     => {salty snack}    0.001220132 0.6315789  0.001931876 16.69779 12   
-    ## [3] {baking powder,flour}              => {sugar}          0.001016777 0.5555556  0.001830198 16.40807 10   
-    ## [4] {ham,processed cheese}             => {white bread}    0.001931876 0.6333333  0.003050330 15.04549 19   
-    ## [5] {Instant food products,whole milk} => {hamburger meat} 0.001525165 0.5000000  0.003050330 15.03823 15
+    ##     lhs                                   rhs              support    
+    ## [1] {Instant food products,soda}       => {hamburger meat} 0.001220132
+    ## [2] {popcorn,soda}                     => {salty snack}    0.001220132
+    ## [3] {baking powder,flour}              => {sugar}          0.001016777
+    ## [4] {ham,processed cheese}             => {white bread}    0.001931876
+    ## [5] {Instant food products,whole milk} => {hamburger meat} 0.001525165
+    ##     confidence coverage    lift     count
+    ## [1] 0.6315789  0.001931876 18.99565 12   
+    ## [2] 0.6315789  0.001931876 16.69779 12   
+    ## [3] 0.5555556  0.001830198 16.40807 10   
+    ## [4] 0.6333333  0.003050330 15.04549 19   
+    ## [5] 0.5000000  0.003050330 15.03823 15
 
     # Scatter plot of rules:
     plot(rules,control=list(col=brewer.pal(11,"Spectral")),main="") #Evaluation metric relationship
@@ -1586,18 +1461,25 @@ confidence to 0.9.
     # arules::inspect the top 5 rules in terms of lift:
     arules::inspect(head(sort(rules2, by ="lift"), 5))
 
-    ##     lhs                                                           rhs               support     confidence coverage    lift     
-    ## [1] {liquor,red/blush wine}                                    => {bottled beer}    0.001931876 0.9047619  0.002135231 11.235269
-    ## [2] {citrus fruit,fruit/vegetable juice,other vegetables,soda} => {root vegetables} 0.001016777 0.9090909  0.001118454  8.340400
-    ## [3] {oil,other vegetables,tropical fruit,whole milk,yogurt}    => {root vegetables} 0.001016777 0.9090909  0.001118454  8.340400
-    ## [4] {butter,cream cheese,root vegetables}                      => {yogurt}          0.001016777 0.9090909  0.001118454  6.516698
-    ## [5] {butter,sliced cheese,tropical fruit,whole milk}           => {yogurt}          0.001016777 0.9090909  0.001118454  6.516698
-    ##     count
-    ## [1] 19   
-    ## [2] 10   
-    ## [3] 10   
-    ## [4] 10   
-    ## [5] 10
+    ##     lhs                        rhs                   support confidence    coverage      lift count
+    ## [1] {liquor,                                                                                       
+    ##      red/blush wine}        => {bottled beer}    0.001931876  0.9047619 0.002135231 11.235269    19
+    ## [2] {citrus fruit,                                                                                 
+    ##      fruit/vegetable juice,                                                                        
+    ##      other vegetables,                                                                             
+    ##      soda}                  => {root vegetables} 0.001016777  0.9090909 0.001118454  8.340400    10
+    ## [3] {oil,                                                                                          
+    ##      other vegetables,                                                                             
+    ##      tropical fruit,                                                                               
+    ##      whole milk,                                                                                   
+    ##      yogurt}                => {root vegetables} 0.001016777  0.9090909 0.001118454  8.340400    10
+    ## [4] {butter,                                                                                       
+    ##      cream cheese,                                                                                 
+    ##      root vegetables}       => {yogurt}          0.001016777  0.9090909 0.001118454  6.516698    10
+    ## [5] {butter,                                                                                       
+    ##      sliced cheese,                                                                                
+    ##      tropical fruit,                                                                               
+    ##      whole milk}            => {yogurt}          0.001016777  0.9090909 0.001118454  6.516698    10
 
     # Scatter plot of rules:
     plot(rules2,control=list(col=brewer.pal(11,"Spectral")),main="") #Evaluation metric relationship
