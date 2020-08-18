@@ -1,11 +1,10 @@
-Title: Predictive Modeling Exercises
-------------------------------------
+Predictive Modeling Exercises
+-----------------------------
 
 Author: Shengxiang Wu (eid: sw38274), Jing Fang (eid: jf36536)
---------------------------------------------------------------
 
-1. Green Buildings
-------------------
+**1. Green Buildings**
+----------------------
 
 ### Introduction
 
@@ -232,10 +231,6 @@ cause of higher rent.
 
     ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 
-    ## Warning: Removed 10 rows containing non-finite values (stat_smooth).
-
-    ## Warning: Removed 10 rows containing missing values (geom_point).
-
 ![](exercise_files/figure-markdown_strict/green%20buildings-6-1.png)
 
     ggplot(data=df2_normal, aes(empl_gr, Rent)) + 
@@ -244,10 +239,6 @@ cause of higher rent.
       labs(title = "Rent vs. empl_gr for normal buildings")
 
     ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
-
-    ## Warning: Removed 10 rows containing non-finite values (stat_smooth).
-
-    ## Warning: Removed 10 rows containing missing values (geom_point).
 
 ![](exercise_files/figure-markdown_strict/green%20buildings-6-2.png)
 
@@ -286,19 +277,19 @@ we can see the green buildings are way younger.
 
 ![](exercise_files/figure-markdown_strict/green%20buildings-8-1.png)
 
-    mean(df2_normal[df2_normal$renovated == 1,]$Rent)#24.9
+    mean(df2_normal[df2_normal$renovated == 1,]$Rent)
 
     ## [1] 24.93558
 
-    mean(df2_normal[df2_normal$renovated == 0,]$Rent)#33.1
+    mean(df2_normal[df2_normal$renovated == 0,]$Rent)
 
     ## [1] 33.07747
 
-    mean(df2_green[df2_green$renovated == 1,]$Rent)#30.1
+    mean(df2_green[df2_green$renovated == 1,]$Rent)
 
     ## [1] 30.12759
 
-    mean(df2_green[df2_green$renovated == 0,]$Rent)#31.9
+    mean(df2_green[df2_green$renovated == 0,]$Rent)
 
     ## [1] 31.88621
 
@@ -336,19 +327,19 @@ rent.
 
 ![](exercise_files/figure-markdown_strict/green%20buildings-10-1.png)
 
-    mean(df2_normal[df2_normal$class_a == 1,]$Rent)#33.4
+    mean(df2_normal[df2_normal$class_a == 1,]$Rent)
 
     ## [1] 33.39883
 
-    mean(df2_normal[df2_normal$class_a == 0,]$Rent)#25.1
+    mean(df2_normal[df2_normal$class_a == 0,]$Rent)
 
     ## [1] 25.13817
 
-    mean(df2_green[df2_green$class_a == 1,]$Rent)#32.1
+    mean(df2_green[df2_green$class_a == 1,]$Rent)
 
     ## [1] 32.1488
 
-    mean(df2_green[df2_green$class_a == 0,]$Rent)#26.4
+    mean(df2_green[df2_green$class_a == 0,]$Rent)
 
     ## [1] 26.438
 
@@ -387,19 +378,19 @@ rent for a class\_a building is higher.
 
 ![](exercise_files/figure-markdown_strict/green%20buildings-12-1.png)
 
-    mean(df2_normal[df2_normal$net == 1,]$Rent)#32.2
+    mean(df2_normal[df2_normal$net == 1,]$Rent)
 
     ## [1] 32.23091
 
-    mean(df2_normal[df2_normal$net == 0,]$Rent)#30.2
+    mean(df2_normal[df2_normal$net == 0,]$Rent)
 
     ## [1] 30.2189
 
-    mean(df2_green[df2_green$net == 1,]$Rent)#21.4
+    mean(df2_green[df2_green$net == 1,]$Rent)
 
     ## [1] 21.38833
 
-    mean(df2_green[df2_green$net == 0,]$Rent)#32.0
+    mean(df2_green[df2_green$net == 0,]$Rent)
 
     ## [1] 31.98135
 
@@ -434,19 +425,19 @@ reason that green buildings are having higher rent.
 
 ![](exercise_files/figure-markdown_strict/green%20buildings-13-1.png)
 
-    mean(df2_normal[df2_normal$amenities == 1,]$Rent)#31.0
+    mean(df2_normal[df2_normal$amenities == 1,]$Rent)
 
     ## [1] 31.0315
 
-    mean(df2_normal[df2_normal$amenities == 0,]$Rent)#27.8
+    mean(df2_normal[df2_normal$amenities == 0,]$Rent)
 
     ## [1] 27.75911
 
-    mean(df2_green[df2_green$amenities == 1,]$Rent)#31.0
+    mean(df2_green[df2_green$amenities == 1,]$Rent)
 
     ## [1] 31.03194
 
-    mean(df2_green[df2_green$amenities == 0,]$Rent)#33.6
+    mean(df2_green[df2_green$amenities == 0,]$Rent)
 
     ## [1] 33.60542
 
@@ -590,8 +581,8 @@ building to claim good rent if we make it as a class\_a building in a
 good cluster, since the age and renovation are not likely to be
 considered for the new building.
 
-2. flights at ABIA
-------------------
+2. **Flights At ABIA**
+----------------------
 
 ### Introduction
 
@@ -655,10 +646,6 @@ focus on these four companies.
 
     p1 + labs(title = "Arrive Delay For Coming Flights")
 
-    ## Warning: Removed 2 rows containing missing values (geom_bar).
-
-    ## Warning: Removed 2 rows containing missing values (geom_text).
-
 ![](exercise_files/figure-markdown_strict/flights-18-1.png)
 
     df_plot2 <- NULL
@@ -700,10 +687,6 @@ focus on these four companies.
       geom_text(aes(label=Dest), position=position_dodge(width=0.9), vjust=-0.25)
 
     p2 + labs(title = "Arrive Delay For Outgoing Flights")
-
-    ## Warning: Removed 2 rows containing missing values (geom_bar).
-
-    ## Warning: Removed 2 rows containing missing values (geom_text).
 
 ![](exercise_files/figure-markdown_strict/flights-19-1.png)
 
@@ -748,10 +731,6 @@ focus on these four companies.
 
     p3 + labs(title = "Depart Delay For Coming Flights")
 
-    ## Warning: Removed 2 rows containing missing values (geom_bar).
-
-    ## Warning: Removed 2 rows containing missing values (geom_text).
-
 ![](exercise_files/figure-markdown_strict/flights-20-1.png)
 
     df_plot4 <- NULL
@@ -795,10 +774,6 @@ focus on these four companies.
 
     p4 + labs(title = "Depart Delay For Outgoing Flights")
 
-    ## Warning: Removed 2 rows containing missing values (geom_bar).
-
-    ## Warning: Removed 2 rows containing missing values (geom_text).
-
 ![](exercise_files/figure-markdown_strict/flights-21-1.png)
 
 ### Insights
@@ -819,8 +794,8 @@ We shall not take UA except the destination or origin is RDU. After all,
 AA flights are likely to delay less than other two companies. As a
 result, I shall take AA if possible.
 
-3. Portfolio Modeling
----------------------
+3. **Portfolio Modeling**
+-------------------------
 
     library(mosaic)
     library(quantmod)
@@ -1074,8 +1049,8 @@ expected returns each time, but the differences between all the
 portfolios are pretty small. Since the result varies and close, we
 cannot conclude which one is better.
 
-4. Market Segmentation
-----------------------
+4. **Market Segmentation**
+--------------------------
 
 ### Introduction
 
@@ -1263,8 +1238,8 @@ and sports\_fandom appear most among different clusterings. So we
 recommend NutrientH20 to advertise on fields such as cooking, travel,
 health\_nutrition or sports\_fandom.
 
-5. Author Attribution
----------------------
+5. **Author Attribution**
+-------------------------
 
     library(tm) # text file processing
 
@@ -1458,8 +1433,8 @@ good, which took nearly 5 mins to get the result. We suspected that it
 might require massive resources for the computer to build up a Random
 Forest model.
 
-6. Association Rule Mining
---------------------------
+6. **Association Rule Mining**
+------------------------------
 
     library(arules)
 
@@ -1566,9 +1541,9 @@ setting support as 0.001 and confidence as 0.5.
     ## verbose   =  FALSE
 
 ![](exercise_files/figure-markdown_strict/groceries-59-1.png) In the
-lift method plot, we found that + The chance of buying main food was
+lift method plot, we found that 1. The chance of buying main food was
 higher than buying other categories of food. For example, people were
-likely to buy ham with whitebread than buying soda with salty snack. +
+likely to buy ham with whitebread than buying soda with salty snack. 2.
 Causality of buying one junk food to another was stronger than buying
 the other categories of food. For example, buying hamburger meat after
 buying soda was more likely to happen than buying vegetables then cream
@@ -1577,8 +1552,6 @@ cheese.
     subrules3 <- head(sort(rules, by="confidence"), 10)
     set.seed(1)
     plot(subrules3, method="graph",control=list(type="items",main=""))
-
-    ## Warning: Unknown control parameters: type
 
     ## Available control parameters (with default values):
     ## main  =  Graph for 10 rules
@@ -1601,10 +1574,10 @@ cheese.
     ## verbose   =  FALSE
 
 ![](exercise_files/figure-markdown_strict/groceries-60-1.png) In the
-plot by confidence, we found that + Different from the lift plot, the
+plot by confidence, we found that 1. Different from the lift plot, the
 causality of buying healthy food was stronger than buying other kind of
 food. For example, people were most likely to buy other vegetables after
-buying soft cheese. + Most of the items were purchased with whole milk.
+buying soft cheese. 2. Most of the items were purchased with whole milk.
 
 Since the market has a huge amount of transaction, support must not be
 above 0.002, however, confidence can be very large. Then we increased
@@ -1637,8 +1610,6 @@ confidence to 0.9.
     set.seed(1)
     plot(subrules22, method="graph",control=list(type="items",main=""))#Graph-based visualization of the top ten rules in terms of lift.
 
-    ## Warning: Unknown control parameters: type
-
     ## Available control parameters (with default values):
     ## main  =  Graph for 10 rules
     ## nodeColors    =  c("#66CC6680", "#9999CC80")
@@ -1668,8 +1639,6 @@ same time.
     subrules33 <- head(sort(rules2, by="confidence"), 10)
     set.seed(1)
     plot(subrules33, method="graph",control=list(type="items",main=""))
-
-    ## Warning: Unknown control parameters: type
 
     ## Available control parameters (with default values):
     ## main  =  Graph for 10 rules
