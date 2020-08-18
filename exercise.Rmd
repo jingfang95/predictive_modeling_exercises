@@ -1,0 +1,946 @@
+---
+title: "Predictive Modeling Exercises"
+author: "Shengxiang Wu, Jing Fang"
+date: "8/15/2020"
+output: md_document
+---
+
+```{r setup, echo=TRUE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Title: Predictive Modeling Exercises
+## Author: Shengxiang Wu (eid: sw38274), Jing Fang (eid: jf36536)
+
+## 1. Green Buildings
+### Introduction
+She uses mean to calculate the likely rent for the new building, which we don't agree. The first reason is that since we know the 
+size of the building is going to be 250,000, and the average rents of green buildings with size 200,000 - 300,000 compare to the similar 
+sized normal buildings' rents don't have much advantage. Unlike 7.7 years to take back the additional fee for a green building,
+it will need 15.4 years if we only consider the buildings in the size range 200,000 - 300,000. 
+
+In addition, since the size is never the only factor deciding the rent, we should consider all other information about a building to make our 
+estimation of the rent. For example, the position of a building might also be important, and so does the structure of it. Obviously, 
+an appartment next to the center park in NYC would be more expansive than a same sized appartment in Flushing, NY. Hence, we are going to 
+invastigate how all the known variables might affect the rent, and finally make our conclusion based on our discoveris.
+```{r library setup}
+library(mosaic)
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r green buildings}
+df = read.csv("greenbuildings.csv", header=T)
+```
+
+### Data Cleaning
+Since some buildings in the data set had very low occupancy rates which is less than 10% of available space occupied, we removed these buildings from consideration. Then we split the data set to look at the green buildings and non-green buildings separately.
+```{r green buildings}
+df_select = df[df$leasing_rate >= 10,]
+df_green = df_select[df_select$green_rating == 1,]
+df_normal = df_select[df_select$green_rating == 0,]
+```
+
+### Data Exploration
+We started with analyzing the relationship between the **size** of the building and its **rent**. Here we ploted a graph to show how size affects the result.
+```{r green buildings}
+ggplot(data=df_select, aes(size, Rent)) + 
+  geom_point(aes(color = green_rating)) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. Size for All Buildings")
+```
+
+```{r green buildings}
+# limiting the size
+df_select_size = df_select[df_select$size >= 200000 & df_select$size <= 300000,]
+
+ggplot(data=df_select_size, aes(size, Rent)) + 
+  geom_point(aes(color = green_rating)) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. Size for Selected Buildings") # Hard to tell if green building in size range 200000 - 300000 gives more rents, and the size likely affect less in this range.
+
+
+df_select_size_green = df_select_size[df_select_size$green_rating == 1,]
+df_select_size_normal = df_select_size[df_select_size$green_rating == 0,]
+
+ggplot(data=df_select_size_green, aes(size, Rent)) + 
+  geom_point(aes(color = Energystar)) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. Size for Selected Green Buildings")
+
+ggplot(data=df_select_size_normal, aes(size, Rent)) + 
+  geom_point(aes(color = Energystar)) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. Size for Selected Non-Green Buildings")
+```
+**Stories**
+```{r green buildings}
+df2_green = df_select_size_green
+df2_normal = df_select_size_normal
+df2_select = df_select_size
+
+ggplot(data=df2_select, aes(stories, Rent)) + 
+  geom_point(aes(color = green_rating)) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. Stories for Selected Buildings") # Likely when the stories is around 10, we have more rent.
+
+ggplot(data=df2_normal, aes(stories, Rent)) + 
+  geom_point(aes()) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. Stories for Non-Green Buildings")
+```
+We could see from the graphs that even not green buildings, the stories around 12 gives the highest rent.
+
+```{r green buildings}
+summary(df2_green$stories) # median and mean are close to 12.
+summary(df2_normal$stories) # median 15, mean 16
+```
+Since the mean of stories for green buildings are closer to 12, likely a cause of higher rent.
+
+**Empl_gr**
+```{r green buildings}
+ggplot(data=df2_select, aes(empl_gr, Rent)) + 
+  geom_point(aes(color = green_rating)) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. empl_gr for selected buildings")
+
+ggplot(data=df2_normal, aes(empl_gr, Rent)) + 
+  geom_point(aes()) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. empl_gr for normal buildings")
+
+#Empl_gr doesn't really tell about the rent.
+```
+It looks messy, so we cannot really tell how "Empl_gr" affects the rent.
+
+**Age**
+```{r green buildings}
+ggplot(data=df2_select, aes(age, Rent)) + 
+  geom_point(aes(color = green_rating)) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. Age for selected buildings")
+
+ggplot(data=df2_normal, aes(age, Rent)) + 
+  geom_point(aes()) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. Age for normal buildings")
+```
+Likely, older buildings are providing less Rent. However, from the plot, we can see the green buildings are way younger.
+
+**Renovation**
+```{r green buildings}
+ggplot(data=df2_select, aes(renovated, Rent)) + 
+  geom_point(aes(color = green_rating)) + 
+  labs(title = "Rent vs. renovation for selected buildings")
+
+mean(df2_normal[df2_normal$renovated == 1,]$Rent)#24.9
+mean(df2_normal[df2_normal$renovated == 0,]$Rent)#33.1
+
+mean(df2_green[df2_green$renovated == 1,]$Rent)#30.1
+mean(df2_green[df2_green$renovated == 0,]$Rent)#31.9
+```
+So basically, if the normal building not renovated, they are likely to have a higher mean value than green buildings. However, more of them are renovated compare to green buildings, which caused they look cheaper. 
+
+```{r green buildings}
+d1 = df2_select %>%
+  group_by(green_rating) %>%
+  summarize(reno = sum(renovated==1)/n())
+d1
+
+ggplot(data = d1) + 
+  geom_bar(mapping = aes(x=green_rating, y=reno), stat='identity') + 
+  labs(title = "Renovation rate")
+```
+Clearly, green buildings are less likely renovated, so it causes higher rent.
+
+**Class_a**
+```{r green buildings}
+ggplot(data=df2_select, aes(class_a, Rent)) + 
+  geom_point(aes(color = green_rating)) + 
+  labs(title = "Rent vs. class for selected buildings")
+
+mean(df2_normal[df2_normal$class_a == 1,]$Rent)#33.4
+mean(df2_normal[df2_normal$class_a == 0,]$Rent)#25.1
+
+mean(df2_green[df2_green$class_a == 1,]$Rent)#32.1
+mean(df2_green[df2_green$class_a == 0,]$Rent)#26.4
+```
+Class a buildings are having higher rent. Normal class a buildings are even more expensive with mean rent compare to class a green buildings. However, more green buildings are likely to be class a, which caused they are having a higher mean rent.
+
+```{r green buildings}
+d2 = df2_select %>%
+  group_by(green_rating) %>%
+  summarize(class = sum(class_a==1)/n())
+d2
+
+ggplot(data = d2) + 
+  geom_bar(mapping = aes(x=green_rating, y=class), stat='identity') + 
+  labs(title = "class_a rate")
+```
+There are more class_a buildings in green building, and the average rent for a class_a building is higher.
+
+**Net**
+```{r green buildings}
+ggplot(data=df2_select, aes(net, Rent)) + 
+  geom_point(aes(color = green_rating)) + 
+  labs(title = "Rent vs. net for selected buildings")
+
+mean(df2_normal[df2_normal$net == 1,]$Rent)#32.2
+mean(df2_normal[df2_normal$net == 0,]$Rent)#30.2
+
+mean(df2_green[df2_green$net == 1,]$Rent)#21.4
+mean(df2_green[df2_green$net == 0,]$Rent)#32.0
+
+d3 = df2_select %>%
+  group_by(green_rating) %>%
+  summarize(net = sum(net==1)/n())
+d3
+
+ggplot(data = d3) + 
+  geom_bar(mapping = aes(x=green_rating, y=net), stat='identity') + 
+  labs(title = "net rate")
+```
+Basically, with the net contract buildings are likely to have lower rent, and the net rate for green building is higher. So this is not a reason that green buildings are having higher rent.
+
+**Amenities**
+```{r green buildings}
+ggplot(data=df2_select, aes(amenities, Rent)) + 
+  geom_point(aes(color = green_rating)) + 
+  labs(title = "Rent vs. amenities for selected buildings")
+
+mean(df2_normal[df2_normal$amenities == 1,]$Rent)#31.0
+mean(df2_normal[df2_normal$amenities == 0,]$Rent)#27.8
+
+mean(df2_green[df2_green$amenities == 1,]$Rent)#31.0
+mean(df2_green[df2_green$amenities == 0,]$Rent)#33.6
+
+d4 = df2_select %>%
+  group_by(green_rating) %>%
+  summarize(amen = sum(amenities==1)/n())
+d4
+
+ggplot(data = d4) + 
+  geom_bar(mapping = aes(x=green_rating, y=amen), stat='identity') + 
+  labs(title = "amenity rate")
+```
+It is hard to tell but it's interesting that green buildings without amenity is likely to be more expensive in rent.
+
+**cd_total_07**
+```{r green buildings}
+ggplot(data=df2_select, aes(cd_total_07, Rent)) + 
+  geom_point(aes(color = green_rating)) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. cd_total_07 for selected buildings")
+
+ggplot(data=df2_green, aes(cd_total_07, Rent)) + 
+  geom_point(aes()) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. cd_total_07 for green buildings")
+
+ggplot(data=df2_normal, aes(cd_total_07, Rent)) + 
+  geom_point(aes()) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. cd_total_07 for normal buildings")
+
+#The rent is low when cd_total_07 close to 1000, high when close to 1600.
+summary(df2_green$cd_total_07) 
+summary(df2_normal$cd_total_07)
+```
+The median of green building is close to 1000, the mean is close to 1600, hence, it is likely causing the rent goes higher for green buildings. But it is hard to tell if the green building caused the cd_total_07, or the cd_total_07 caused the high rent for green buildings. Since the it is a demand on energy, it is somehow overlapping with green building property. Hence, we will not try to analyse this and total.dd.07, and hd.total.07. 
+
+**Cluster Rent**
+```{r green buildings}
+ggplot(data=df2_normal, aes(cluster_rent, Rent)) + 
+  geom_point(aes()) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. Cluster Rent for normal buildings")
+
+ggplot(data=df2_green, aes(cluster_rent, Rent)) + 
+  geom_point(aes()) + 
+  geom_smooth(se = FALSE) +
+  labs(title = "Rent vs. Cluster Rent for green buildings")
+
+mean(df2_green$cluster_rent) 
+mean(df2_normal$cluster_rent)
+```
+As cluster rent increase, the rent also increase. So it is important where the building is built no matter normal or green.
+
+### Insights and conclusions
+By only consider the size of the building in the range of 200000 - 300000, we can say that the place of the building is important, which will affect the rent for green or non-green.
+
+The stories may be a confounding, since the stories in the range 10-12 will make the rent higher for all buildings, but green buildings are having median and mean close to 12, which will indeed make the green building to have a general higher rent compare to normal buildings.
+
+The age is another confounding variable. The older buildings are having lower rent by the plot, and we can see most of green buildings are younger than 50 years old, and likely below 25 years, but there are many normal buildings have age 75-100 years. 
+So it might be the case that green buildings are more expensive because they are new, not because they are green buildings.
+
+Also, renovation will make normal building's rent lower, but it won't really affect green buildings much. More than 35% of the normal buildings are renovated, hence causing a lower rent is likely to be the case. Since green buildings are not really affected by the renovation, the mean rent of them might be just like it should be.
+
+In addition, class_a buildings are having higher rent compare to others. More than 80% of the green buildings are class a, and indeed class_a normal buildings have a greater mean rent compare to class_a green buildings. In this case, Green building with higher mean rent might be explained by the higher portion of class_a buildings. 
+
+To sum up, to build a green building is not necessarily claim more rent because the higher mean rent for green building is instead because of the higher portion of stories closer to 12, the better age, the less effective by the renovation and a higher portion of class_a building. Without spending extra 5,000,000, we might also to build a normal building to claim good rent if we make it as a class_a building in a good cluster, since the age and renovation are not likely to be considered for the new building.
+
+## 2. flights at ABIA
+### Introduction
+As a traveler, one of the most important things that we really care about is weather or not our flights would delay. In this problem, we will focus on analyzing the delay situations of different flight companies.
+```{r library setup}
+library(mosaic)
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r flights}
+df = read.csv("ABIA.csv", header=T)
+```
+
+### Data Cleaning
+Although there are many flight companies in the data set, our group members tend to take the flight from AA, Delta and UA, so we decided to focus on these four companies.
+```{r flights}
+df_clean = na.omit(df)
+df_clean2 <- df_clean[, c('UniqueCarrier', 'ArrDelay', 'DepDelay', 'Origin', 'Dest')]
+df_clean2 <- df_clean2[df_clean2$UniqueCarrier %in% c('AA', 'DL', 'UA'),]
+```
+
+### Data Exploration
+```{r flights}
+df_plot1 <- NULL
+df_clean2 <- df_clean2[df_clean2$Origin !='AUS', ]
+list_carrier <- unique(df_clean2$UniqueCarrier)
+list_orig <- unique(df_clean2$Origin)
+
+for (n_carrier in 1:length(list_carrier)) {
+  #n_carrier <- 1
+  name_carrier <- list_carrier[n_carrier]
+  df_carrier <- df_clean2[df_clean2$UniqueCarrier == name_carrier,]
+  for (n_orig in 1:length(list_orig)) {
+    #n_orig <- 36
+    name_orig <- list_orig[n_orig]
+    df_carrier_orig <- df_carrier[df_clean2$Origin == name_orig,]
+    df_carrier_orig <- df_carrier_orig[complete.cases(df_carrier_orig),]
+    if (nrow(df_carrier_orig)>= 1) {
+      df_loop <- data.frame(name_carrier, name_orig,  mean(df_carrier_orig$ArrDelay), sd(df_carrier_orig$ArrDelay))
+      
+    } else {
+      df_loop <- data.frame(name_carrier, name_orig,  NA, NA)
+    }
+    
+    colnames(df_loop) <- c('Carrier', 'Origin', 'Mean', 'SD')
+    df_plot1 <- rbind(df_plot1, df_loop)
+   
+  }
+} # the end of n_carrier
+df_plot1$Facet <- 'A'
+
+p1 <- ggplot(df_plot1, aes(x=Carrier, y=Mean, fill=Origin, color = Origin)) + 
+  geom_bar(stat="identity", color="black", 
+           position=position_dodge()) +
+  geom_errorbar(aes(ymin=Mean-SD, ymax=Mean+SD), width=.2,
+                position=position_dodge(.9))  + 
+  geom_text(aes(label=Origin), position=position_dodge(width=0.9), vjust=-0.25)
+
+p1 + labs(title = "Arrive Delay For Coming Flights")
+```
+
+```{r flights}
+df_plot2 <- NULL
+df_clean2 <- df_clean[,c('UniqueCarrier', 'ArrDelay', 'DepDelay', 'Origin', 'Dest')]
+df_clean2 <- df_clean2[df_clean2$Dest !='AUS', ]
+df_clean2 <- df_clean2[df_clean2$UniqueCarrier %in% c('AA','DL','UA'), ]
+
+list_carrier <- unique(df_clean2$UniqueCarrier)
+list_dest <- unique(df_clean2$Dest)
+
+for (n_carrier in 1:length(list_carrier)) {
+  #n_carrier <- 1
+  name_carrier <- list_carrier[n_carrier]
+  df_carrier <- df_clean2[df_clean2$UniqueCarrier == name_carrier,]
+  for (n_dest in 1:length(list_dest)) {
+    #n_orig <- 36
+    name_dest <- list_dest[n_dest]
+    df_carrier_dest <- df_carrier[df_clean2$Dest == name_dest, ]
+    df_carrier_dest <- df_carrier_dest[complete.cases(df_carrier_dest),]
+    if (nrow(df_carrier_dest)>= 1) {
+      df_loop <- data.frame(name_carrier, name_dest,  mean(df_carrier_dest$ArrDelay), sd(df_carrier_dest$ArrDelay))
+      
+    } else {
+      df_loop <- data.frame(name_carrier, name_dest,  NA, NA)
+    }
+    
+    colnames(df_loop) <- c('Carrier', 'Dest', 'Mean', 'SD')
+    df_plot2 <- rbind(df_plot2, df_loop)
+    
+  }
+} # the end of n_carrier
+df_plot2$Facet <- 'B'
+
+p2 <- ggplot(df_plot2, aes(x=Carrier, y=Mean, fill=Dest, color = Dest)) + 
+  geom_bar(stat="identity", color="black", 
+           position=position_dodge()) +
+  geom_errorbar(aes(ymin=Mean-SD, ymax=Mean+SD), width=.2,
+                position=position_dodge(.9))  + 
+  geom_text(aes(label=Dest), position=position_dodge(width=0.9), vjust=-0.25)
+
+p2 + labs(title = "Arrive Delay For Outgoing Flights")
+```
+
+```{r flights}
+df_plot3 <- NULL
+df_clean2 <- df_clean[,c('UniqueCarrier', 'ArrDelay', 'DepDelay', 'Origin', 'Dest')]
+df_clean2 <- df_clean2[df_clean2$Origin !='AUS', ]
+df_clean2_arr = df_clean2
+df_clean2 <- df_clean2[df_clean2$UniqueCarrier %in% c('AA','DL','UA'), ]
+
+list_carrier <- unique(df_clean2$UniqueCarrier)
+list_orig <- unique(df_clean2$Origin)
+
+for (n_carrier in 1:length(list_carrier)) {
+  #n_carrier <- 1
+  name_carrier <- list_carrier[n_carrier]
+  df_carrier <- df_clean2[df_clean2$UniqueCarrier == name_carrier,]
+  for (n_orig in 1:length(list_orig)) {
+    #n_orig <- 36
+    name_orig <- list_orig[n_orig]
+    df_carrier_orig <- df_carrier[df_clean2$Origin == name_orig, ]
+    df_carrier_orig <- df_carrier_orig[complete.cases(df_carrier_orig),]
+    if (nrow(df_carrier_orig)>= 1) {
+      df_loop <- data.frame(name_carrier, name_orig,  mean(df_carrier_orig$DepDelay), sd(df_carrier_orig$DepDelay))
+      
+    } else {
+      df_loop <- data.frame(name_carrier, name_orig,  NA, NA)
+    }
+    
+    colnames(df_loop) <- c('Carrier', 'Origin', 'Mean', 'SD')
+    df_plot3 <- rbind(df_plot3, df_loop)
+    
+  }
+} # the end of n_carrier
+df_plot3$Facet <- 'C'
+
+p3 <- ggplot(df_plot3, aes(x=Carrier, y=Mean, fill=Origin, color = Origin)) + 
+  geom_bar(stat="identity", color="black", 
+           position=position_dodge()) +
+  geom_errorbar(aes(ymin=Mean-SD, ymax=Mean+SD), width=.2,
+                position=position_dodge(.9))  + 
+  geom_text(aes(label=Origin), position=position_dodge(width=0.9), vjust=-0.25)
+
+p3 + labs(title = "Depart Delay For Coming Flights")
+```
+
+```{r flights}
+df_plot4 <- NULL
+df_clean2 <- df_clean[,c('UniqueCarrier', 'ArrDelay', 'DepDelay', 'Origin', 'Dest')]
+df_clean2 <- df_clean2[df_clean2$Dest !='AUS', ]
+df_clean2_dep = df_clean2
+df_clean2 <- df_clean2[df_clean2$UniqueCarrier %in% c('AA','DL','UA'), ]
+
+list_carrier <- unique(df_clean2$UniqueCarrier)
+list_dest <- unique(df_clean2$Dest)
+
+for (n_carrier in 1:length(list_carrier)) {
+  #n_carrier <- 1
+  name_carrier <- list_carrier[n_carrier]
+  df_carrier <- df_clean2[df_clean2$UniqueCarrier == name_carrier,]
+  for (n_dest in 1:length(list_dest)) {
+    #n_orig <- 36
+    name_dest <- list_dest[n_dest]
+    df_carrier_dest <- df_carrier[df_clean2$Dest == name_dest, ]
+    df_carrier_dest <- df_carrier_dest[complete.cases(df_carrier_dest),]
+    if (nrow(df_carrier_dest)>= 1) {
+      df_loop <- data.frame(name_carrier, name_dest,  mean(df_carrier_dest$DepDelay), sd(df_carrier_dest$DepDelay))
+      
+    } else {
+      df_loop <- data.frame(name_carrier, name_dest,  NA, NA)
+    }
+    
+    colnames(df_loop) <- c('Carrier', 'Dest', 'Mean', 'SD')
+    df_plot4 <- rbind(df_plot4, df_loop)
+    
+  }
+} # the end of n_carrier
+df_plot4$Facet <- 'D'
+
+p4 <- ggplot(df_plot4, aes(x=Carrier, y=Mean, fill=Dest, color = Dest)) + 
+  geom_bar(stat="identity", color="black", 
+           position=position_dodge()) +
+  geom_errorbar(aes(ymin=Mean-SD, ymax=Mean+SD), width=.2,
+                position=position_dodge(.9))  + 
+  geom_text(aes(label=Dest), position=position_dodge(width=0.9), vjust=-0.25)
+
+p4 + labs(title = "Depart Delay For Outgoing Flights")
+```
+
+### Insights
+By building up 4 plots to analyze the depart/arrive delay for outgoing/incoming flights at Austin, we have the following discovers:
+  + We should avoid taking DL, UA flight from STL to Austin, because they are likely to delay more than an hour, and at worst can delay about 3 hours.
+  + Except going to RDU, We should definitely avoid taking UA flights because the plots tell us the depart delay for outgoing UA flights are likely to be higher than other flight companies.
+  + We should not take UA flight to come back to Austin as well because it is likely to delay more than other two companies' flights.
+  
+### Conclusion
+We shall not take UA except the destination or origin is RDU. After all, AA flights are likely to delay less than other two companies. As a result, I shall take AA if possible.
+
+## 3. Portfolio Modeling
+```{r library setup, warning=FALSE}
+library(mosaic)
+library(quantmod)
+library(foreach)
+```
+
+We decided to select 5 ETFs - SPY, QQQ, VTI, GLD, IVW - with different levels of risk - SPY seems to have a relatively low risk while IVW seems to have a relatively high risk; some of them are what we bought in the real life.
+```{r stocks}
+stocks = c("SPY", "QQQ", "VTI", "GLD", "IVW")
+prices = getSymbols(stocks, from = "2015-08-01")
+```
+
+### Data Processing
+We started with adjusting the prices for splits and dividends and then computed the returns from the closing prices.
+```{r stocks, warning=FALSE}
+# adjust for splits and dividends
+for(ticker in stocks) {
+	expr = paste0(ticker, "a = adjustOHLC(", ticker, ")")
+	eval(parse(text=expr))
+}
+returns = cbind(ClCl(SPYa),
+								ClCl(QQQa),
+								ClCl(VTIa),
+								ClCl(GLDa),
+								ClCl(IVWa))
+returns = as.matrix(na.omit(returns))
+```
+
+**Correlation**
+```{r stocks}
+pairs(returns)
+```
+Except GLD, other stocks are positively correlated with each other, which makes sense because they are based on S&P 500.
+
+Then we started with our investments with $100,000 initial wealth and we wanted to analyze the profit or loss of portfolios with different weights on stocks - same weights for each stock, high weights for low-risk stocks, and high weights for high-risk stocks. For each portfolio, we could simulate different possible futures.
+**same weights for each stock**
+```{r stocks}
+set.seed(1)
+initial_wealth = 100000
+sim1 = foreach(i=1:5000, .combine='rbind') %do% {
+	total_wealth = initial_wealth
+	weights = c(0.2, 0.2, 0.2, 0.2, 0.2)
+	holdings = weights * total_wealth
+	n_days = 20
+	wealthtracker = rep(0, n_days)
+	for(today in 1:n_days) {
+		return.today = resample(returns, 1, orig.ids=FALSE)
+		holdings = holdings + holdings*return.today
+		total_wealth = sum(holdings)
+		wealthtracker[today] = total_wealth
+	}
+	wealthtracker
+}
+# each row is a simulated trajectory, each column is a data
+head(sim1)
+hist(sim1[,n_days], 25)
+mean(sim1[,n_days])
+mean(sim1[,n_days] - initial_wealth)
+hist(sim1[,n_days]- initial_wealth, breaks=30)
+# quantile(sim1[,n_days]- initial_wealth, prob=0.05)
+```
+One of the possible total earnings for 20 trading days is 1136.976.
+
+**high weights for the stocks with low risk**
+```{r stocks}
+set.seed(1)
+sim2 = foreach(i=1:5000, .combine='rbind') %do% {
+	total_wealth = initial_wealth
+	weights = c(0.4, 0.15, 0.15, 0.15, 0.15)
+	holdings = weights * total_wealth
+	n_days = 20
+	wealthtracker = rep(0, n_days)
+	for(today in 1:n_days) {
+		return.today = resample(returns, 1, orig.ids=FALSE)
+		holdings = holdings + holdings*return.today
+		total_wealth = sum(holdings)
+		wealthtracker[today] = total_wealth
+	}
+	wealthtracker
+}
+# each row is a simulated trajectory, each column is a data
+head(sim2)
+hist(sim2[,n_days], 25)
+mean(sim2[,n_days])
+mean(sim2[,n_days] - initial_wealth)
+hist(sim2[,n_days]- initial_wealth, breaks=30)
+```
+One of the possible total earnings for 20 trading days is 1093.769.
+
+**high weights for the stocks with high risk**
+```{r stocks}
+set.seed(1)
+sim3 = foreach(i=1:5000, .combine='rbind') %do% {
+	total_wealth = initial_wealth
+	weights = c(0.15, 0.15, 0.15, 0.15, 0.4)
+	holdings = weights * total_wealth
+	n_days = 20
+	wealthtracker = rep(0, n_days)
+	for(today in 1:n_days) {
+		return.today = resample(returns, 1, orig.ids=FALSE)
+		holdings = holdings + holdings*return.today
+		total_wealth = sum(holdings)
+		wealthtracker[today] = total_wealth
+	}
+	wealthtracker
+}
+# each row is a simulated trajectory, each column is a data
+head(sim3)
+hist(sim3[,n_days], 25)
+mean(sim3[,n_days])
+mean(sim3[,n_days] - initial_wealth)
+hist(sim3[,n_days]- initial_wealth, breaks=30)
+```
+One of the possible total earnings for 20 trading days is 1160.512.
+
+### Conclusion
+We run three portfolios several times and got different possible expected returns each time, but the differences between all the portfolios are pretty small. Since the result varies and close, we cannot conclude which one is better.
+
+
+## 4. Market Segmentation
+### Introduction
+In this problem, we will identify interesting market segments for NutrientH20 that appear to stand out in its social-media audience.
+```{r library setup}
+library(tidyverse)
+library(ggplot2)
+library(LICORS)
+library(fpc) # plot cluster
+```
+
+```{r market segmentation}
+social_marketing = read.csv("social_marketing.csv", row.names=1)
+```
+
+### Data Cleaning
+```{r market segmentation, echo=TRUE, include=FALSE}
+not_bot = social_marketing$spam == 0 & social_marketing$adult == 0
+clean_marketing = social_marketing[not_bot,]
+
+remove_uncategorized = clean_marketing[,-5]
+remove_chatter = remove_uncategorized[,-1]
+interest = remove_chatter[,1:32]
+summary(interest)
+```
+
+### Data Exploration
+
+**Correlation**
+To figure out the relationship between different variables, we started with plotting the correlation matrix.
+```{r market segmentation}
+correlation_mat = cor(interest)
+# heatmap visualization, reorder the variables by hierarchical clustering
+ggcorrplot::ggcorrplot(correlation_mat, hc.order=TRUE, tl.cex=8)
+```
+In the correlation graph, we found that some features were highly correlated with each other. For example, personal fitness and outdoors are highly correlated with each other; fashion, cooking and beauty are highly correlated with each other; college_uni, online_gaming and sports_playing are highly correlated with each other.
+
+**Principal Component Analysis**
+```{r market segmentation}
+pca_marketing = prcomp(interest, scale=TRUE)
+# variance plot
+plot(pca_marketing, type="line")
+summary(pca_marketing)
+```
+```{r market segmentation}
+var <- apply(pca_marketing$x, 2, var)
+prop <- var / sum(var)
+plot(cumsum(prop), xlab = "PC", ylab = "Proportion of variance explained")
+min(which(cumsum(prop) > 0.8)) # 16
+```
+We found that when it reached to PC16, nearly 80% of variance could be explained.
+
+```{r market segmentation}
+varimax(pca_marketing$rotation[, 1:16])$loadings
+```
+
+**K-Means Clustering**
+```{r market segmentation}
+cluster_data = as.data.frame(pca_marketing$x[,1:16])
+# run k-means
+cluster1 = kmeanspp(cluster_data, 5, nstart=15)
+plotcluster(interest, cluster1$cluster)
+```
+
+```{r market segmentation}
+scale_df = scale(interest, center=TRUE, scale=TRUE)
+mu = attr(scale_df, "scaled:center")
+sigma = attr(scale_df, "scaled:scale")
+cluster_df <- as.data.frame(cbind(cluster1$center[1,]*sigma + mu, 
+                            cluster1$center[2,]*sigma + mu,
+                            cluster1$center[3,]*sigma + mu,
+                            cluster1$center[4,]*sigma + mu,
+                            cluster1$center[5,]*sigma + mu))
+
+summary(cluster_df)
+```
+
+```{r market segmentation}
+cluster_df$interest = row.names(cluster_df)
+```
+
+```{r market segmentation}
+ggplot(cluster_df, aes(x = reorder(interest, -V1), y=V1)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=-40)) +
+  labs(title="Cluster 1", x="Interest", y="Clustering Value", cex=0.5)
+```
+```{r market segmentation}
+ggplot(cluster_df, aes(x = reorder(interest, -V2), y=V2)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=-40)) +
+  labs(title="Cluster 2", x="Interest", y="Clustering Value", cex=0.5)
+```
+
+```{r market segmentation}
+ggplot(cluster_df, aes(x = reorder(interest, -V3), y=V3)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=-40)) +
+  labs(title="Cluster 3", x="Interest", y="Clustering Value", cex=0.5)
+```
+```{r market segmentation}
+ggplot(cluster_df, aes(x = reorder(interest, -V4), y=V4)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=-40)) +
+  labs(title="Cluster 4", x="Interest", y="Clustering Value", cex=0.5)
+```
+
+```{r market segmentation}
+ggplot(cluster_df, aes(x = reorder(interest, -V5), y=V5)) +
+  geom_bar(stat="identity", position="dodge") +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=-40)) +
+  labs(title="Cluster 5", x="Interest", y="Clustering Value", cex=0.5)
+```
+### Conclusion
+We could help NutrientH20 to perform specific marketing campaigns by identifing interesting market segments for it. Based on the outputs, we found that cooking, travel, health_nutrition and sports_fandom appear most among different clusterings. So we recommend NutrientH20 to advertise on fields such as cooking, travel, health_nutrition or sports_fandom.
+
+## 5. Author Attribution
+```{r library setup, warning=FALSE}
+library(tm) # text file processing
+library(tidyverse) # principal component analysis
+library(e1071) # naive bayes
+library(class) # k nearest neighbors
+library(randomForest) # random forest
+library(ggplot2)
+```
+
+### Data Processing
+**Training Set**
+```{r author attribution}
+precess_file <- function(filename) {
+  readPlain(elem=list(content=readLines(filename)), id=filename, language='en')
+}
+train_articles <- dir("../predictive_modeling_exercises/ReutersC50/C50train/", recursive=TRUE, full.names=TRUE, pattern='/*.txt')
+author_list <- dir("../predictive_modeling_exercises/ReutersC50/C50train/")
+train_authors <- NULL
+for (author in author_list) {
+  train_authors = append(train_authors, rep(author, 50))
+}
+```
+
+```{r author attribution, warning=FALSE}
+train_df = lapply(train_articles, precess_file)
+train_corpus = Corpus(VectorSource(train_df))
+train_corpus = tm_map(train_corpus, content_transformer(tolower))
+train_corpus = tm_map(train_corpus, content_transformer(removePunctuation))
+train_corpus = tm_map(train_corpus, content_transformer(stripWhitespace))
+train_corpus = tm_map(train_corpus, content_transformer(removeNumbers))
+
+train_DTM = DocumentTermMatrix(train_corpus)
+clean_train_DTM = removeSparseTerms(train_DTM, .99)
+tf_idf = weightTfIdf(clean_train_DTM)
+train_mat <- as.matrix(tf_idf)
+train_mat <- train_mat[,which(colSums(train_mat) != 0)]
+```
+
+**Test Set**
+```{r author attribution}
+test_articles <- dir("../predictive_modeling_exercises/ReutersC50/C50test/", recursive=TRUE, full.names=TRUE, pattern='/*.txt')
+test_author_list <- dir("../predictive_modeling_exercises/ReutersC50/C50test/")
+test_authors <- NULL
+for (author in test_author_list) {
+  test_authors = append(test_authors, rep(author, 50))
+}
+```
+
+```{r author attribution, warning=FALSE}
+test_df = lapply(test_articles, precess_file)
+test_corpus = Corpus(VectorSource(test_df))
+test_corpus = tm_map(test_corpus, content_transformer(tolower))
+test_corpus = tm_map(test_corpus, content_transformer(removePunctuation))
+test_corpus = tm_map(test_corpus, content_transformer(stripWhitespace))
+test_corpus = tm_map(test_corpus, content_transformer(removeNumbers))
+
+test_DTM = DocumentTermMatrix(test_corpus, list(dictionary=colnames(train_DTM)))
+clean_test_DTM = removeSparseTerms(test_DTM, .99)
+test_tf_idf = weightTfIdf(clean_test_DTM)
+test_mat <- as.matrix(test_tf_idf)
+test_mat <- test_mat[,which(colSums(test_mat) != 0)]
+```
+
+### Principal Component Analysis
+```{r author attribution}
+intersect = intersect(colnames(train_mat), colnames(test_mat))
+train_mat = train_mat[,intersect]
+test_mat = test_mat[,intersect]
+pca_train = prcomp(train_mat, scale=TRUE)
+pca_predict = predict(pca_train, newdata = test_mat)
+# variance plot
+plot(pca_train, type="line")
+```
+
+```{r author attribution}
+var <- apply(pca_train$x, 2, var)
+prop <- var / sum(var)
+plot(cumsum(prop), xlab = "PC", ylab = "Proportion of variance explained", cex = 0.05)
+sum(var[1:800] / sum(var)) # 0.7905833
+```
+We found that when it reached to PC800, nearly 80% of variance could be explained.
+
+### Classification Models
+Before performing classification models, we started with setting up our training and test data sets based on the previous output. 
+```{r author attribution}
+train = data.frame(pca_train$x[,1:800])
+train['author'] = train_authors
+train_loading = pca_train$rotation[,1:800]
+
+test_temp <- scale(test_mat) %*% train_loading
+test <- as.data.frame(test_temp)
+test['author']= test_authors
+```
+
+**Naive Bayes**
+```{r author attribution}
+naive_bayes = naiveBayes(as.factor(author)~., data=train)
+naive_bayes_pred = predict(naive_bayes, test)
+actual_author = as.factor(test$author)
+naive_bayes_result <- as.data.frame(cbind(actual_author, naive_bayes_pred))
+naive_bayes_result$correct <- ifelse(naive_bayes_result$actual_author == naive_bayes_result$naive_bayes_pred, 1, 0)
+# accuracy
+naive_bayes_accuracy = sum(naive_bayes_result$correct) / nrow(naive_bayes_result) # 0.2996
+naive_bayes_accuracy
+```
+The accuracy of Naive Bayes is 29.96%.
+
+**K Nearest Neighbors**
+```{r author attribution}
+train.X = subset(train, select = -c(author))
+test.X = subset(test, select = -c(author))
+train.Y = as.factor(train$author)
+test.Y = as.factor(test$author)
+set.seed(1)
+knn_pred = knn(train.X, test.X, train.Y, k=1)
+knn_result = as.data.frame(cbind(test.Y, knn_pred))
+knn_result$correct <- ifelse(knn_result$test.Y == knn_result$knn_pred, 1, 0)
+# accuracy
+knn_accuracy = sum(knn_result$correct) / nrow(knn_result) # 0.338
+knn_accuracy
+```
+The accuracy of K Nearest Neighbors is 33.8%.
+
+**Random Forest**
+```{r author attribution}
+set.seed(1)
+random_forest = randomForest(as.factor(author)~., data=train, mtry=10, importance=TRUE)
+random_forest_pred = predict(random_forest, data=test)
+
+random_forest_result = as.data.frame(cbind(actual_author, random_forest_pred))
+random_forest_result$correct <- ifelse(random_forest_result$actual_author == random_forest_result$random_forest_pred, 1, 0)
+# accuracy
+random_forest_accuracy = sum(random_forest_result$correct) / nrow(random_forest_result) # 
+random_forest_accuracy
+```
+The accuracy of Random Forest is 72.56%.
+
+### Conclusion
+```{r author attribution}
+result = data.frame("Model"=c("Naive Bayes", "K Nearest Neighbors", "Random Forest"), "Accuracy"=c(naive_bayes_accuracy, knn_accuracy, random_forest_accuracy))
+result
+```
+Compared with other models, Random Forest performed best with an accuracy of 72.56%. However, the time complexity of Random Forest is not good, which took nearly 5 mins to get the result. We suspected that it might require massive resources for the computer to build up a Random Forest model.
+
+## 6. Association Rule Mining
+```{r library setup, warning=FALSE}
+library(arules)
+library(arulesViz)
+library("RColorBrewer")
+```
+
+```{r groceries}
+df = read.transactions('Groceries.txt', sep = ',')
+inspect(head(df,5))
+```
+
+### Data Exploration
+```{r groceries, echo=TRUE, include=FALSE}
+frequentItems <- eclat(df, parameter = list(supp = 0.1, maxlen = 15))
+```
+
+```{r groceries}
+inspect(frequentItems)
+itemFrequencyPlot(df, topN=15, type="absolute", main="Item Frequency")
+```
+
+Support represents the number of transaction containing the target items divided by the total number of transactions. Confidence represents how the target items are likely to be bought together. We started with setting support as 0.001 and confidence as 0.5.
+```{r groceries, echo=TRUE, include=FALSE}
+rules = apriori(df, parameter=list(support=0.001, confidence=0.5))
+```
+
+```{r groceries}
+# Inspect the top 5 rules in terms of lift:
+inspect(head(sort(rules, by ="lift"),5))
+# Scatter plot of rules:
+plot(rules,control=list(col=brewer.pal(11,"Spectral")),main="") #Evaluation metric relationship
+```
+
+```{r groceries, echo=TRUE, include=FALSE}
+subrules2 <- head(sort(rules, by="lift"), 10)
+```
+
+```{r groceries, warning=FALSE}
+set.seed(1)
+plot(subrules2, method="graph",control=list(type="items",main="")) # Graph-based visualization of the top ten rules in terms of lift.
+```
+In the lift method plot, we found that
+  + The chance of buying main food was higher than buying other categories of food. For example, people were likely to buy ham with whitebread than buying soda with salty snack.
+  + Causality of buying one junk food to another was stronger than buying the other categories of food. For example, buying hamburger meat after buying soda was more likely to happen than buying vegetables then cream cheese.
+
+```{r groceries}
+subrules3 <- head(sort(rules, by="confidence"), 10)
+set.seed(1)
+plot(subrules3, method="graph",control=list(type="items",main=""))
+```
+In the plot by confidence, we found that
+  + Different from the lift plot, the causality of buying healthy food was stronger than buying other kind of food. For example, people were most likely to buy other vegetables after buying soft cheese.
+  + Most of the items were purchased with whole milk.
+
+Since the market has a huge amount of transaction, support must not be above 0.002, however, confidence can be very large. Then we increased confidence to 0.9.
+```{r groceries, echo=TRUE, include=FALSE}
+rules2 = apriori(df, parameter=list(support=0.001, confidence=0.9))
+```
+
+```{r groceries}
+# Inspect the top 5 rules in terms of lift:
+inspect(head(sort(rules2, by ="lift"), 5))
+# Scatter plot of rules:
+plot(rules2,control=list(col=brewer.pal(11,"Spectral")),main="") #Evaluation metric relationship
+```
+
+```{r groceries}
+subrules22 <- head(sort(rules2, by="lift"), 10)
+set.seed(1)
+plot(subrules22, method="graph",control=list(type="items",main=""))#Graph-based visualization of the top ten rules in terms of lift.
+```
+After increasing confidence, we found from the graph that the causality between alcohols was much stronger than other items, and people were very likely to buy the three different kinds of alcohols together at the same time.
+
+```{r groceries}
+subrules33 <- head(sort(rules2, by="confidence"), 10)
+set.seed(1)
+plot(subrules33, method="graph",control=list(type="items",main=""))
+```
+When plotting by confidence, we got the similar graph compare to the one we had before.
+
+### Conclusion
+We find the correlation on alcohol drinks are higher than other foods. We are confident that people are very likely buying three kind of alcohols together at the same time. Hence, it is important for the market to make sure that non of the alcohol drink would run out of stock. In addition, whole milk is the item appears mostly in the transactions, people are likely to buy other items with milk, so we need to ensure that the market should not run out of milk because it might cause losing potential purchases of other items.
